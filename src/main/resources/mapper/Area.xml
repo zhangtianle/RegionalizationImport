@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.tianle.mapper.MyMapper">
+
+    <select id="selectAreaByCode" resultType="me.tianle.model.Area">
+        SELECT * FROM queen_area WHERE code = #{code}
+    </select>
+
+    <select id="selectCityByCode" resultType="me.tianle.model.City">
+        SELECT * FROM queen_city WHERE code = #{code}
+    </select>
+
+    <select id="selectProvinceByCode" resultType="me.tianle.model.Province">
+        SELECT * FROM queen_province WHERE code = #{code}
+    </select>
+
+    <insert id="insertProvince" parameterType="me.tianle.model.Province" useGeneratedKeys="true" keyProperty="id">
+        <selectKey resultType="long" keyProperty="idRaw">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        INSERT INTO queen_province (cname,code,ename) VALUES
+        <foreach item="item" collection="list" separator=",">
+            (#{item.cname}, #{item.code}, #{item.ename})
+        </foreach>
+    </insert>
+    <insert id="insertCity" parameterType="me.tianle.model.City" useGeneratedKeys="true" keyProperty="id">
+        <selectKey resultType="long" keyProperty="idRaw">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        INSERT INTO queen_city (cname,code,province_code,ename) VALUES
+        <foreach item="item" collection="list" separator=",">
+            (#{item.cname}, #{item.code}, #{item.provinceCode}, #{item.ename})
+        </foreach>
+    </insert>
+    <insert id="insertArea" parameterType="me.tianle.model.Area" useGeneratedKeys="true" keyProperty="id">
+        <selectKey resultType="long" keyProperty="idRaw">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        INSERT INTO queen_area ( cname,code,city_code,ename) VALUES
+        <foreach item="item" collection="list" separator=",">
+            (#{item.cname}, #{item.code},#{item.cityCode}, #{item.ename})
+        </foreach>
+    </insert>
+</mapper>
